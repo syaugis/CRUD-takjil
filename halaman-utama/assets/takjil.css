@@ -104,11 +104,9 @@ input[type="checkbox"] {
 .me .image {
 	width: 70px;
 	height: 70px;
-	background: #fff url(https://thispersondoesnotexist.com/image) no-repeat
-		center;
 	background-size: cover;
-	border-radius: 100%;
-	cursor: pointer;
+	border-radius: 50%;
+	opacity: 0.6;
 }
 
 .me .myinfo {
@@ -145,13 +143,18 @@ nav {
 	overflow-y: auto;
 }
 
-nav button:hover {
+nav button:hover,
+nav button:hover > svg {
 	background: #eee;
+	opacity: 1;
+	color: black;
 }
 
-nav button > i {
+nav button > svg {
 	color: #999;
 	float: left;
+	width: 27px;
+	opacity: 0.6;
 }
 
 nav button > span {
@@ -185,6 +188,7 @@ nav button > span {
 	display: block;
 	z-index: 520;
 	opacity: 0;
+	border: 1px solid #ddd;
 }
 
 .confTitle {
@@ -211,12 +215,23 @@ nav button > span {
 .profile .image {
 	width: 140px;
 	height: 140px;
-	background: #fff url(https://thispersondoesnotexist.com/image) no-repeat
-		center;
 	background-size: cover;
 	border-radius: 100%;
 	float: left;
 	margin-right: 30px;
+}
+
+.profile:nth-child(1) .image {
+	background-image: url(./img/abil.png);
+}
+.profile:nth-child(2) .image {
+	background-image: url(./img/julio.jpg);
+}
+.profile:nth-child(3) .image {
+	background-image: url(./img/syaugi.jpg);
+}
+.profile:nth-child(4) .image {
+	background-image: url(./img/fahrul.jpg);
 }
 
 .side {
@@ -232,9 +247,11 @@ nav button > span {
 }
 
 .side .pStatus {
+	color: rgb(255, 39, 39);
 	margin-top: 5px;
 	font-size: 14px;
 	font-weight: 300;
+	text-decoration: underline;
 }
 .side ul {
 	float: none;
@@ -282,17 +299,17 @@ header {
 	height: 32px;
 	margin: 20px 15px;
 	margin-bottom: 0px;
-	color: #bbb;
+	background-color: #fff;
 	cursor: pointer;
-	opacity: 0.6;
 }
 
-.trigger:hover {
+.trigger:hover svg {
 	opacity: 1;
 }
 
-.trigger > i {
+.trigger > svg {
 	font-size: 24px;
+	opacity: 0.6;
 }
 
 .searchTitle {
@@ -355,14 +372,10 @@ header {
 	position: absolute;
 	width: 55px;
 	height: 55px;
-	background: #ddd url(./assets/img/logo.png) no-repeat center;
+	background: #ddd url(./img/logo.png) no-repeat center;
 	background-size: cover;
 	border-radius: 100%;
 	margin: 13px 13px;
-}
-
-.listInfo .my-image {
-	background-image: url(./logo.png);
 }
 
 .listInfo .name {
@@ -389,7 +402,7 @@ header {
 	background-color: #419fd9;
 	color: #fff;
 	font-size: 40px;
-	border-radius: 45% 45% 45% 3px;
+	border-radius: 40% 40% 40% 40%;
 }
 
 #createEntity:hover {
@@ -400,7 +413,7 @@ header {
 	float: left;
 	width: calc(100% - 321px);
 	height: 100vh;
-	background: #999;
+	background-image: url(https://s-media-cache-ak0.pinimg.com/originals/51/ed/c0/51edc046eb80046ee4755ee71d0f19ca.jpg);
 }
 
 .rightPanel .topBar {
