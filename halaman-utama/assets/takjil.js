@@ -78,7 +78,7 @@ function createEntity(name, alamat){
     let newDataSect = `<section id="${id}" class="newDataSect">`+
     '<div class="topBar">'+'<div class="leftSide">'+
     `<p class="nama">${name}</p>`+`<p class="alamat">${alamat}</p>`+
-    '</div></div>'+'<div class="data userBg">'+
+    '</div></div>'+'<div class="data userBg">'+ // tables goes here
     '</div></section>';
     $(".rightPanel").append(newDataSect);
     $(`#${id}`).css("display", "none");
