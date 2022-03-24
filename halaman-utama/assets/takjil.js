@@ -1,4 +1,10 @@
 $(document).ready(function(){
+    let db = openDatabase(
+        "db.takjil",
+        "2.0",
+        "Takjil DataBase",
+        2 * 1024 * 1024
+    );
     /* make side menu show up */
     $(".trigger").click(function(){
         $(".menuWrap").fadeIn(180);
@@ -52,7 +58,8 @@ $(document).ready(function(){
     $("#createEntity").click(function(){
         let nama = prompt("Masukkan nama Masjid");
         let alamat = prompt("Masukkan alamat Masjid");
-        createEntity(nama, alamat);
+        let rt = prompt("Masukkan jumlah RT");
+        createEntity(nama, alamat, rt);
     });
 });
 
@@ -65,21 +72,30 @@ function openData(evt, namaData){
     document.getElementById(namaData).style.display = "block";
 }
 
-function createEntity(name, alamat){
+function createEntity(name, alamat, rt){
     let id = name.split('').filter(e => e.trim().length).join('');
-    let listButton = `<div onClick="openData(event, '${id}')" class="listButton">`+
+    let listButton = createListButton(id, name, alamat);
+    $(".titleList").append(listButton);
+
+    let newDataSect = createNewDataSect(id, name, alamat);
+    $(".rightPanel").append(newDataSect);
+    $(`#${id}`).css("display", "none");
+}
+
+function createListButton(id, name, alamat){
+    return `<div onClick="openData(event, '${id}')" class="listButton">`+
     '<div class="listInfo">'+
     '<div class="image"></div>'+
     `<p class="name">${name}</p>`+
     `<p class="alamat">${alamat}</p>`+
     '</div>'+'</div>';
-    $(".titleList").append(listButton);
+}
 
-    let newDataSect = `<section id="${id}" class="newDataSect">`+
+function createNewDataSect(id, name, alamat){
+    return `<section id="${id}" class="newDataSect">`+
     '<div class="topBar">'+'<div class="leftSide">'+
     `<p class="nama">${name}</p>`+`<p class="alamat">${alamat}</p>`+
-    '</div></div>'+'<div class="data userBg">'+ // tables goes here
-    '</div></section>';
-    $(".rightPanel").append(newDataSect);
-    $(`#${id}`).css("display", "none");
+    '</div></div>'+'<div class="data userBg">'+ '<div class="container col-6">' +
+    // tables goes here
+    '</div></div></section>';
 }
