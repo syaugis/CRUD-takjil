@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+		<!-- Bootstrap CSS -->
+		<!-- <link href="./css/bootstrap.css" rel="stylesheet" type="text/css" /> -->
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+			crossorigin="anonymous"
+		/>
+		<style>
+			body {
+				background-image: url(https://s-media-cache-ak0.pinimg.com/originals/51/ed/c0/51edc046eb80046ee4755ee71d0f19ca.jpg);
+			}
+
+			.btn-login {
+				font-size: 0.9rem;
+				letter-spacing: 0.05rem;
+				padding: 0.75rem 1rem;
+			}
+
+			.btn-su {
+				text-decoration: none;
+				color: black;
+			}
+			#cont {
+				width: 100vw;
+				height: 100vh;
+				display: grid;
+				place-items: center;
+			}
+		</style>
+
+		<title>Login Page</title>
+	</head>
+	<body>
+		<section id="cont">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+						<div class="card border-0 shadow rounded-3 my-5">
+							<div class="card-body p-4 p-sm-5">
+								<h5 class="card-title text-center mb-5 fw-light fs-5">
+									Sign Up
+								</h5>
+								<form>
+									<div class="form-floating mb-3">
+										<input
+											type="text"
+											class="form-control"
+											id="username"
+											placeholder="Username"
+											required
+										/>
+										<label for="username">Username</label>
+									</div>
+									<div class="form-floating mb-3">
+										<input
+											type="email"
+											class="form-control"
+											id="email"
+											placeholder="Email"
+											required
+										/>
+										<label for="email">Email</label>
+									</div>
+									<div class="form-floating mb-3">
+										<input
+											type="password"
+											class="form-control"
+											id="password"
+											placeholder="Password"
+											required
+										/>
+										<label for="password">Password</label>
+									</div>
+
+									<div class="d-grid">
+										<button
+											class="btn btn-primary btn-login text-uppercase fw-bold"
+											type="button"
+											id="to-signin"
+										>
+											Sign Up
+										</button>
+									</div>
+									<hr class="my-4" />
+									<div class="d-grid mb-2">
+										<button
+											class="btn btn-google btn-login text-uppercase fw-bold"
+											type="button"
+										>
+											<i class="fab fa-google me-2"></i>
+											<a class="btn-su" href="../signin/index.html">Sign In</a>
+										</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<script src="./js/bootstrap.min.js" type="text/javascript"></script>
+		<script>
+			let db = openDatabase(
+				"db.takjil",
+				"2.0",
+				"Takjil DataBase",
+				2 * 1024 * 1024
+			);
+			db.transaction(function (transaction) {
+				let sql =
+					"CREATE TABLE if not exists user" +
+					"(username VARCHAR (50) NOT NULL," +
+					"email VARCHAR (50) NOT NULL," +
+					"password VARCHAR (50) NOT NULL," +
+					"CONSTRAINT email_user UNIQUE (email))";
+				transaction.executeSql(sql);
+			});
+
+			$(document).ready(() => {
+				$("#to-signin").click(function () {
+					let username = $("#username").val();
+					let email = $("#email").val();
+					let pass = $("#password").val();
+					db.transaction(function (transaction) {
+						let sql =
+							"INSERT INTO user (username, email, password) VALUES (?,?,?)";
+						transaction.executeSql(
+							sql,
+							[username, email, pass],
+							function () {
+								window.location.assign("../signin/index.html");
+								alert("Account was created succesfully");
+							},
+							function (transaction, err) {
+								alert(err.message);
+							}
+						);
+					});
+				});
+			});
+		</script>
+
+		<!-- Option 2: Separate Popper and Bootstrap JS -->
+		<!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    -->
+	</body>
+</html>
