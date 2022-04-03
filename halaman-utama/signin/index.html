@@ -13,6 +13,11 @@
 			integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
 			crossorigin="anonymous"
 		/>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+		/>
+		<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<style>
 			body {
 				background-image: url(https://s-media-cache-ak0.pinimg.com/originals/51/ed/c0/51edc046eb80046ee4755ee71d0f19ca.jpg);
@@ -130,6 +135,24 @@
 				) {
 					window.location.assign("../index.html");
 				}
+				Swal.fire({
+					title: "Selamat Datang",
+					width: 600,
+					text: "Si-Takjil Merupakan Sebuah Aplikasi Berbasis Website yang akan Membantu Anda dalam Melakukan Pendataan Kontribusi Warga Selama Bulan Ramadhan Secara Online.",
+					imageUrl: "../assets/img/logo.png",
+					imageWidth: 400,
+					imageHeight: 400,
+					imageAlt: "Logo Si-Takjil",
+					background:
+						"url(https://s-media-cache-ak0.pinimg.com/originals/51/ed/c0/51edc046eb80046ee4755ee71d0f19ca.jpg)",
+					showClass: {
+						popup: "animate__animated animate__fadeInDown",
+					},
+					hideClass: {
+						popup: "animate__animated animate__fadeOutUp",
+					},
+				});
+
 				$("#login").click(function () {
 					db.transaction(function (transaction) {
 						let username = $("#username").val();
