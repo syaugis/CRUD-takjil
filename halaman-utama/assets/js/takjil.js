@@ -9,6 +9,7 @@ window.onload = function () {
 	}
 	$(".myinfo .name").text(username);
 };
+
 $(document).ready(function () {
 	db.transaction(function (transaction) {
 		let sql =
@@ -25,68 +26,36 @@ $(document).ready(function () {
 				console.log(err.message);
 			}
 		);
-	});
-	// CRUD
 
+		db.transaction(function (transaction) {
+			let sql =
+				"CREATE TABLE if not exists warga" +
+				"(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+				"id_masjid VARVHAR(100) NOT NULL," +
+				"nama_warga VARCHAR(100) NULL," +
+				"alamat_warga VARCHAR(100) NULL," +
+				"RT INTEGER NULL," +
+				"total_kontribusi INTEGER NULL)";
+			transaction.executeSql(sql, undefined);
+		});
+});
+	// CRUD
 	// loadData();
 	showList();
-	$(".rightPanel").on(
-		"click",
-		`#${localStorage.getItem("namaMasjid")} .create`,
-		function () {
-			// $("#create").on("click", function(){
-			swal({
-				title: "Do you want to create table?",
-				icon: "warning",
-				buttons: true,
-				dangerMode: true,
-			}).then((willCreate) => {
-				if (willCreate) {
-					db.transaction(function (transaction) {
-						let sql =
-							"CREATE TABLE warga" +
-							"(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
-							"id_masjid VARVHAR(100) NOT NULL," +
-							"nama_warga VARCHAR(100) NULL," +
-							"alamat_warga VARCHAR(100) NULL," +
-							"RT INTEGER NULL," +
-							"total_kontribusi INTEGER NULL)";
-						transaction.executeSql(
-							sql,
-							undefined,
-							function () {
-								swal("Success", {
-									icon: "success",
-								});
-								loadData();
-							},
-							function (transaction, err) {
-								swal(err.message, {
-									icon: "error",
-								});
-							}
-						);
-					});
-				} else {
-					return;
-				}
-			});
-		}
-	);
-
 	$(".rightPanel").on(
 		"click",
 		`#${localStorage.getItem("namaMasjid")} .delete`,
 		function () {
 			swal({
-				title: "Do you want to delete this table?",
+				title: "Do you want to delete all data?",
 				icon: "warning",
 				buttons: true,
 				dangerMode: true,
 			}).then((willDeleteTable) => {
 				if (willDeleteTable) {
 					db.transaction(function (transaction) {
-						let sql = "DROP TABLE warga";
+						const namaMasjid = localStorage.getItem("namaMasjid");
+						let sql = "DELETE FROM warga WHERE id_masjid ='" + namaMasjid + "'";
 						transaction.executeSql(
 							sql,
 							undefined,
@@ -152,10 +121,6 @@ $(document).ready(function () {
 		}
 	);
 
-	// $("#show").click(function () {
-	//     loadData();
-	// });
-
 	$(".rightPanel").on(
 		"click",
 		`#${localStorage.getItem("namaMasjid")} .cancel`,
@@ -169,6 +134,73 @@ $(document).ready(function () {
 			$(".total").val("");
 		}
 	);
+
+	$("#showData").click(function () {
+		const namaMasjid = localStorage.getItem("namaMasjid");
+		localStorage.setItem("isShowDataChecked", true);
+		const listRT = [];
+
+		$(this).removeClass("mb-5");
+		$(this).addClass(" mb-2 ");
+		$(".chart").css("display", "block");
+		db.transaction(function (transaction) {
+			var sql = "SELECT * FROM warga WHERE id_masjid='" + namaMasjid + "'";
+			transaction.executeSql(
+				sql,
+				[],
+				function (transaction, results) {
+					let len = results.rows.length,
+						i;
+					for (i = 0; i < len; i++) {
+						listRT.push(results.rows.item(i).RT);
+					}
+					listRT.sort((a, b) => {
+						if (a > b) return 1;
+						if (a < b) return -1;
+						return 0;
+					});
+
+					const terbesar = listRT[listRT.length - 1];
+					const totalRT = new Array(terbesar);
+					let j = 0;
+					for (let i = 0; i < terbesar; i++) {
+						totalRT[i] = 0;
+					}
+					for (let i = 0; i < terbesar; ) {
+						while (true) {
+							if (listRT[j] == i + 1) {
+								totalRT[i]++;
+								j++;
+							} else {
+								i++;
+								break;
+							}
+						}
+					}
+					// console.log("total RT");
+					// console.log(totalRT);
+					for (let i = 0; i < totalRT.length; i++) {
+						if (totalRT[i] === 0) {
+							totalRT.splice(i, 1);
+						}
+					}
+					for (let i = 0; i < totalRT.length; i++) {
+						if (totalRT[i] === 0) {
+							totalRT.splice(i, 1);
+						}
+					}
+					let uniqueList = [...new Set(listRT)];
+					const chartObj = {};
+					uniqueList.forEach((element, index) => {
+						chartObj[`RT ${element}`] = totalRT[index];
+					});
+					myChart(chartObj);
+				},
+				null
+			);
+		});
+	});
+
 	alwaysCreateEntity();
 	/* make side menu show up */
 	$(".trigger").click(function () {
@@ -347,6 +379,7 @@ function createNewDataSect(id, name, alamat) {
 		input() +
 		grid() +
 		button() +
+		searchFilt() +
 		tabel() +
 		"</div></div></section>"
 	);
@@ -401,22 +434,34 @@ function grid() {
 
 function button() {
 	return (
-		'<button class="create btn btn-warning" id="create">Create Table</button>' +
-		'<button class="delete btn btn-danger" id="delete">Delete Table</button><br />' +
-		'<div style="float: right">' +
-		"<span>Filter by RT</span>" +
-		'<select name="" id="listRT" onchange="filterRT()"></select>' +
-		"</div>"
+		'<div class="dropdown">' + 
+		'<button class="delete btn btn-danger" id="delete">Delete All Data</button>'+
+		'<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">Export Table</button>' +
+		'<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">' +
+		  '<li><a class="dropdown-item" onclick="exportPdf()" href="#">To PDF</a></li>' +
+		  '<li><a class="dropdown-item" onclick="exportExcel()" href="#">To Excel</a></li>' +
+		'</ul></div>'
+	);
+}
+
+function searchFilt() {
+	return (
+		'<div style="float: right;">' +
+            '<span>Filter by RT</span>' +
+            '<select name="" id="listRT" onchange="filterRT()"></select>' +
+        '</div>' +
+        '<input type="text" id="myInput" onkeyup="searchTable()" placeholder= "Search for names.."></input>'
 	);
 }
 
 function tabel() {
 	return (
-		'<table class="table table-bordered table-striped table-hover">' +
+		'<table class="table table-bordered table-striped table-hover" id="tableData">' +
 		'<thead><tr style="text-align: center">' +
 		"<th>No</th><th>Person Name</th><th>Address</th><th>RT</th>" +
 		"<th>Amount of Contribute</th><th>Actions</th></tr>" +
-		'</thead><tbody class="tablejil"></tbody></table>'
+		'</thead><tbody class="tablejil"></tbody></table>'+
+		'<button id="showData" type="button">Show Percentage</button>'				
 	);
 }
 
@@ -676,5 +721,121 @@ function wipe(id) {
 				icon: "success",
 			});
 		}
+	});
+}
+
+function exportPdf() {
+	html2canvas(document.getElementById('tableData'), {
+		onrendered: function (canvas) {
+			var data = canvas.toDataURL();
+			var docDefinition = {
+				content: [{
+					image: data,
+					width: 500
+				}]
+			};
+			pdfMake.createPdf(docDefinition).download("Table.pdf");
+		}
+	});
+}
+
+function exportExcel(filename = ''){
+	var downloadLink;
+	var dataType = 'application/vnd.ms-excel';
+	var tableSelect = document.getElementById("tableData");
+	var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+	
+	// Specify file name
+	filename = filename?filename+'.xls':'excel_data.xls';
+	
+	// Create download link element
+	downloadLink = document.createElement("a");
+	
+	document.body.appendChild(downloadLink);
+	
+	if(navigator.msSaveOrOpenBlob){
+		var blob = new Blob(['\ufeff', tableHTML], {
+			type: dataType
+		});
+		navigator.msSaveOrOpenBlob( blob, filename);
+	}else{
+		// Create a link to the file
+		downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+	
+		// Setting the file name
+		downloadLink.download = filename;
+		
+		//triggering the function
+		downloadLink.click();
+	}
+}
+
+function searchTable() {
+	// Declare variables
+	var input, filter, table, tr, td, i, txtValue;
+	input = document.getElementById("myInput");
+	filter = input.value.toUpperCase();
+	table = document.getElementById("tableData");
+	tr = table.getElementsByTagName("tr");
+
+	// Loop through all table rows, and hide those who don't match the search query
+	for (i = 0; i < tr.length; i++) {
+		td = tr[i].getElementsByTagName("td")[1];
+		if (td) {
+		txtValue = td.textContent || td.innerText;
+		if (txtValue.toUpperCase().indexOf(filter) > -1) {
+			tr[i].style.display = "";
+		} else {
+			tr[i].style.display = "none";
+		}
+		}
+	}
+}
+
+function myChart(response) {
+	var xValues = Object.keys(response);
+	var yValues = Object.values(response);
+
+	function randomInteger(max) {
+		return Math.floor(Math.random() * (max + 1));
+	}
+
+	function randomRgbColor() {
+		let r = randomInteger(255);
+		let g = randomInteger(255);
+		let b = randomInteger(255);
+		return [r, g, b];
+	}
+
+	var barColors = [];
+	var borderColors = [];
+
+	for (let i = 0; i < yValues.length; i++) {
+		let color = randomRgbColor();
+		let barTextColor = `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.5)`;
+		let barBorderColor = `rgba(${color[0]}, ${color[1]}, ${color[2]}, 1)`;
+		barColors.push(barTextColor);
+		borderColors.push(barBorderColor);
+	}
+
+	new Chart("myChartPie", {
+		type: "pie",
+		data: {
+			labels: xValues,
+			datasets: [
+				{
+					backgroundColor: barColors,
+					borderColor: borderColors,
+					data: yValues,
+				},
+			],
+		},
+		options: {
+			legend: { display: false },
+			title: {
+				display: true,
+				text: "Data Kontribusi Takjil Per RT",
+			},
+		},
 	});
 }
