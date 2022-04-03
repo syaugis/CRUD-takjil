@@ -1,0 +1,267 @@
+html {
+	padding: 0;
+	margin: 0;
+}
+body {
+	width: 100%;
+}
+.main {
+	position: relative;
+	width: 100vw;
+	height: 100vh;
+}
+
+.detail .container {
+	width: 80%;
+	margin: auto;
+}
+
+.detail .container .table {
+	font-size: 10px;
+	font-weight: bolder;
+}
+
+.detail .container .table .btn {
+	font-size: 10px;
+}
+
+.container {
+	margin: 0;
+	padding: 56px 0 0 0;
+	width: 100%;
+}
+
+.titleList {
+	width: 100%;
+	height: calc(100vh - 70px);
+	float: left;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.listButton {
+	/* position: relative; */
+	float: left;
+	width: 100%;
+	height: 80px;
+	background: #fff;
+	color: #555;
+	cursor: pointer;
+	overflow: hidden;
+}
+
+.listButton:hover {
+	color: #555;
+	background: #eee;
+}
+
+.detail {
+	position: relative;
+	padding-top: 80px;
+	padding-bottom: 100px;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	right: -100%;
+	opacity: 0;
+	z-index: 922;
+}
+
+.detail nav {
+	width: 100%;
+	position: fixed;
+	top: 0;
+	display: flex;
+	flex-direction: row;
+	height: 80px;
+	background: #419fd9;
+}
+
+.back {
+	flex: 1;
+	display: grid;
+	place-items: center;
+	background-color: rgba(21, 29, 54, 0);
+	border: none;
+}
+.detail #back svg {
+	width: 30px;
+	fill: #fff;
+	opacity: 0.6;
+	transition: opacity 0.3s;
+}
+
+#back:hover svg {
+	opacity: 1;
+}
+
+.moreTools {
+	height: 100%;
+	flex: 1;
+	display: grid;
+	place-items: center;
+	background-color: rgba(21, 29, 54, 0);
+	border: none;
+}
+
+.detail .moreTools svg {
+	width: 30px;
+	height: 30px;
+	fill: #fff;
+	opacity: 0.6;
+	transition: opacity 0.3s;
+}
+
+.moreTools:hover svg {
+	opacity: 1;
+}
+
+.detailButton {
+	/* position: relative; */
+	flex: 5;
+	color: #fff;
+	overflow: hidden;
+}
+
+.detailInfo {
+	width: 100%;
+	float: left;
+}
+
+.detailInfo p {
+	float: left;
+}
+
+.detailInfo .image {
+	position: absolute;
+	width: 55px;
+	height: 55px;
+	background: #ddd url(../assets/img/profile-masjid.png) no-repeat center;
+	background-size: cover;
+	border-radius: 100%;
+	margin: 13px 13px;
+}
+
+.detailInfo .name {
+	float: left;
+	font-weight: 600;
+	margin-left: 80px;
+	margin-top: 15px;
+	margin-bottom: 0;
+}
+
+.detailInfo .alamat {
+	float: left;
+	clear: left;
+	margin-left: 80px;
+	margin-top: 3px;
+}
+
+.active,
+.active:hover {
+	color: #fff;
+	background: #419fd9;
+}
+
+.listInfo {
+	width: 100%;
+	float: left;
+}
+
+.listInfo p {
+	float: left;
+}
+
+.listInfo .image {
+	position: absolute;
+	width: 55px;
+	height: 55px;
+	background: #ddd url(../assets/img/profile-masjid.png) no-repeat center;
+	background-size: cover;
+	border-radius: 100%;
+	margin: 13px 13px;
+}
+
+.listInfo .name {
+	float: left;
+	font-weight: 600;
+	margin-left: 80px;
+	margin-top: 15px;
+	margin-bottom: 0;
+}
+
+.listInfo .alamat {
+	float: left;
+	clear: left;
+	margin-left: 80px;
+	margin-top: 3px;
+}
+.me {
+	/* position: relative; */
+	/* width: calc(100% - 50px); */
+	width: 100%;
+	height: 140px;
+	/* background: #419fd9; */
+	padding: 15px 25px;
+	margin-bottom: 15px;
+}
+
+.me .image {
+	width: 70px;
+	height: 70px;
+	background-size: cover;
+	border-radius: 50%;
+	opacity: 0.6;
+	margin-bottom: 10px;
+}
+
+.me .myinfo {
+	/* position: absolute; */
+	bottom: 15px;
+	font-size: 1em;
+	color: rgb(21, 29, 54);
+}
+
+.myinfo .name {
+	font-weight: 600;
+	margin-bottom: 5px;
+	font-size: 1.5em;
+}
+
+.myinfo .phone {
+	font-weight: 300;
+}
+
+.footer {
+	width: 100%;
+	padding: 0 15px;
+}
+
+.footer > * {
+	line-height: 0;
+	font-weight: 100;
+}
+
+.logo-takjil {
+	padding: 10px 0 0 11px;
+	box-sizing: border-box;
+	width: 100%;
+}
+.logo-takjil img {
+	width: 50%;
+	height: 50px;
+	object-fit: cover;
+}
+
+@media screen and (max-width: 400px) {
+	.offcanvas-start {
+		text-align: center;
+	}
+	/* .offcanvas-header {
+		margin: auto;
+	} */
+	.me .image {
+		margin: auto;
+	}
+}
